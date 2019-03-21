@@ -2,6 +2,7 @@
 {% block body %}
     <h1>게시글 목록</h1>
     <a href="{% url 'boards:create' %}">새글 작성</a>
+    <hr>
     {% for board in boards %}
         <p>{{ board.pk }}</p>
         <p>{{ board.title }}</p>
