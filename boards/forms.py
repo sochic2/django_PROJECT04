@@ -25,7 +25,7 @@ class BoardForm(forms.ModelForm):
         # field = ['title', 'content']
         
         # models.py 에 지정해 놓은 필드를 사용한다.
-        fields = '__all__'
+        fields = ['title', 'content',]
         widgets = {'title': forms.TextInput(attrs={
                                                 'placeholder': '제목을 입력하라',
                                                 'class' : 'title' }),
