@@ -1,0 +1,57 @@
+{% extends 'boards/base.html' %}
+{% load gravatar %}
+{% block body %}
+<div class="container d-flex justify-content-center">
+    <img src="https://s.gravatar.com/avatar/{{ puser.email | makemd5 }}?s=200" width="250" height="250" class="rounded-circle mx-auto " alt="profile img">
+    
+    
+    
+{% if user == puser %}
+   
+    <div>
+        <a href="{% url 'accounts:edit' %}">[회원 수정] </a>
+        <a href="{% url 'accounts:change_password' %}">[비번 수정] </a>
+        <form action="{% url 'accounts:delete' %}" method="POST" style="display: inline;" onsubmit = "return confirm ('R U SURE?');">
+            {% csrf_token %}
+            <input type="submit" value="탈퇴"/>
+        </form>
+    </div>
+   
+{% endif %}
+</div>
+<h1>{{ puser }}의 프로필</h1>
+<p><h3>last_name : {{ puser.last_name }}</h3></p>
+<p><h3>first_name : {{ puser.first_name }}</h3></p>
+<a href="mailto:{{ puser.email }}">{{ puser.email }}</a>
+<hr>
+
+<div class=" row">
+{% for board in puser.board_set.all %}
+    <div class="card col-4 mt-5" style="width: 18rem">
+        <img src="http://image.news1.kr/system/photos/2019/1/20/3477555/article.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ board.title }}</h5>
+            <p class="card-text">{{ board.content}}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"> <p>댓글 수 : {{ board.comment_set.count}}</p></li>
+        </ul>
+        <div class="card-body">
+            <a href="{% url 'boards:detail' board.id %}" class="card-link">{{ board.id }}번째 글 보러 가기</a>
+        </div>
+    </div>
+{% endfor %}
+</div>
+<hr>
+<h1>{{ puser }}가 작성한 댓글</h1>
+<hr>
+
+{% for comment in puser.comment_set.all %}
+    <p><a href="{% url 'boards:detail' comment.board.id %}">{{ comment.board}}글</a>의 댓글/ {{ comment.content }}</p>
+    <hr>
+{% endfor %}
+
+
+
+
+{% endblock %}

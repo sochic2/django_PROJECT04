@@ -1,4 +1,5 @@
 {% extends 'boards/base.html' %}
+{% load crispy_forms_tags %}
 {% block body %}
 <h1>{{ board.pk }}번째 글</h1>
 <h2>{{ board.title }} </h2>
@@ -12,4 +13,34 @@
     </form>
     <a href="{% url 'boards:update' board.pk %}">수정</a>
 {% endif %}
+<hr>
+
+{% for comment in comments %}
+    <div>
+        <b><a href="{% url 'accounts:profile' comment.user.pk %}">{{ comment.user }}</a></b> : {{ comment.content}}
+        {% if user == comment.user %}
+            <form action = "{% url 'boards:comment_delete' board.pk comment.pk %}" method="POST" style= "display:inline;">
+                {% csrf_token %}
+                <input type = "submit" value="삭제">
+            </form>
+        {% endif %}        
+    </div> 
+
+{% empty %}
+    <div>댓글이 없습니다.</div>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <form action="{% url 'boards:comment_create' board.pk %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="submit"/>
+    </form>
+{% else %}
+    <a href="{% url 'accounts:login' %}"> 댓글을 작성하려면 로그인 하세요</a>
+{% endif %}
+
+
+
+
 {% endblock %}

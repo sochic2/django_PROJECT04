@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import get_user_model 
 from .forms import UserCustomChangeForm, UserCustomCreationForm
+
 
 
 # Create your views here.
@@ -80,6 +82,15 @@ def change_password(request):
     return render(request, 'accounts/auth_form.html', context)
     
     
+"""
+index에 게시글 작성자명 누르면 해당 프로필 페이지로 이동!
+내가 쓴 모든 글 출력
+내가 쓴 댓글 출력
+"""
+def profile(request, user_pk):
+    puser = get_object_or_404(get_user_model(), pk=user_pk)
+    context = {'puser':puser, }
+    return render(request, 'accounts/profile.html', context)
     
     
     
